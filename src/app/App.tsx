@@ -305,13 +305,13 @@ const NOISE = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
 
 function ParchmentPage({ children, dark = false }: { children: React.ReactNode; dark?: boolean }) {
   return (
-    <div className="min-h-screen relative overflow-hidden"
+    <div className="w-full h-screen flex flex-col relative overflow-hidden"
       style={{ background: dark ? "#160B05" : "#F8F1E5" }}>
       <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
         style={{ backgroundImage: NOISE, backgroundRepeat: "repeat" }} />
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: "radial-gradient(ellipse at 50% 50%, transparent 40%, rgba(43,30,24,0.25) 100%)" }} />
-      <div className="relative">{children}</div>
+      <div className="relative flex-1">{children}</div>
     </div>
   );
 }
@@ -855,7 +855,7 @@ function LoadingScreen({ onStart, onShowSDGInfo }: { onStart: () => void; onShow
 
   return (
     <ParchmentPage>
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16 sm:py-20">
+      <div className="w-full h-screen flex flex-col items-center justify-center px-4 py-16 sm:py-20">
         {homeContent}
       </div>
     </ParchmentPage>
@@ -1416,7 +1416,7 @@ function Chapter1Screen({ scores, onComplete }: {
   );
 
   return (
-    <div className="min-h-screen relative overflow-hidden"
+    <div className="w-full h-screen relative overflow-hidden flex flex-col"
       style={{ background: frame === "complete" ? "#1A1108" : "#0c0700" }}>
 
       {/* ── Background atmosphere ── */}
@@ -1550,7 +1550,7 @@ function Chapter1Screen({ scores, onComplete }: {
       </div>
 
       {/* ── Main content ── */}
-      <div className="relative min-h-screen flex flex-col items-center justify-center px-5 py-10">
+      <div className="relative flex-1 flex flex-col items-center justify-center px-5 py-10 overflow-y-auto">
 
         {/* INTRO */}
         {frame === "intro" && (
@@ -1955,7 +1955,7 @@ export default function App() {
   };
 
   return (
-    <div className="size-full">
+    <div className="w-full h-screen flex flex-col">
       {screen === "loading" && (
         <LoadingScreen 
           onStart={() => setScreen("chapter-select")}
