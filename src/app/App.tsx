@@ -7,10 +7,10 @@ import rizalFlat from "@/imports/2000__1_.png";
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 type Screen =
-  | "loading" | "chapter-select"
+  | "loading" | "sdg-info" | "chapter-select"
   | "ch1" | "ch1-complete"
   | "ch2" | "ch2-complete"
-  | "ch3" | "final-score";
+  | "ch3" | "final-score" | "analysis";
 
 interface Scores { awareness: number; sustainability: number; justice: number; }
 
@@ -413,16 +413,16 @@ function StoryPanel({ scenario, dark }: { scenario: ScenarioData; dark: boolean 
   return (
     <div className="flex flex-col items-center">
       <div className="w-full" style={{ border:`1px solid ${bc}` }}>
-        <Portrait type={scenario.storyPortrait} className="w-full h-44 object-cover object-left" />
+        <Portrait type={scenario.storyPortrait} className="w-full h-48 object-cover object-left" />
       </div>
-      <div className="relative w-full mt-3 p-3"
+      <div className="relative w-full mt-4 p-4"
         style={{ background: dark ? "rgba(240,230,200,0.05)" : "rgba(237,229,208,0.7)", border:`1px solid ${bc}` }}>
         <div className="absolute -top-[7px] left-5 w-3 h-3 rotate-45"
           style={{ background: dark ? "#160B05" : "#EDE5D0", borderLeft:`1px solid ${bc}`, borderTop:`1px solid ${bc}` }} />
-        <p className="font-im-fell italic leading-relaxed" style={{ fontSize:11, color: tc }}>
+        <p className="font-im-fell italic leading-relaxed" style={{ fontSize:11.5, color: tc, lineHeight: "1.7" }}>
           &ldquo;{scenario.storySpeech}&rdquo;
         </p>
-        <p className="font-cinzel tracking-[0.18em] uppercase mt-1.5" style={{ fontSize:8, color: ac }}>
+        <p className="font-cinzel tracking-[0.18em] uppercase mt-2" style={{ fontSize:8, color: ac }}>
           — Rizal
         </p>
       </div>
@@ -437,7 +437,7 @@ function WordFillQuiz({ scenario, dark, wrong, snapped, onCorrect, onWrong }: {
 }) {
   return (
     <div>
-      <div className={`p-6 ${snapped ? "animate-book-glow" : ""}`}
+      <div className={`p-7 ${snapped ? "animate-book-glow" : ""}`}
         style={{
           background: "#F5EDD8",
           border: "2px solid rgba(43,30,24,0.32)",
@@ -447,13 +447,13 @@ function WordFillQuiz({ scenario, dark, wrong, snapped, onCorrect, onWrong }: {
         }}>
         <div className="absolute top-0 bottom-0 left-1/2 w-px pointer-events-none"
           style={{ background:"rgba(43,30,24,0.1)", position:"relative", height:0 }} />
-        <p className="font-cinzel text-center text-foreground/35 tracking-widest uppercase mb-3" style={{ fontSize:9 }}>
+        <p className="font-cinzel text-center text-foreground/35 tracking-widest uppercase mb-4" style={{ fontSize:9 }}>
           Complete the Quote
         </p>
         <div className="font-im-fell text-foreground text-center leading-loose"
-          style={{ fontSize:"clamp(0.95rem,2.5vw,1.1rem)" }}>
+          style={{ fontSize:"clamp(0.95rem,2.5vw,1.1rem)", lineHeight: "1.9" }}>
           <span>&ldquo;{scenario.quote?.split("___")[0]}</span>
-          <span className="inline-flex items-end mx-1" style={{ minWidth:88, verticalAlign:"bottom" }}>
+          <span className="inline-flex items-end mx-2" style={{ minWidth:88, verticalAlign:"bottom" }}>
             {snapped ? (
               <span className="font-cinzel font-bold animate-snap-in px-2"
                 style={{ color:"#5E8B4A", borderBottom:"2px solid #5E8B4A" }}>
@@ -465,11 +465,11 @@ function WordFillQuiz({ scenario, dark, wrong, snapped, onCorrect, onWrong }: {
           </span>
           <span>{scenario.quote?.split("___")[1]}&rdquo;</span>
         </div>
-        <p className="font-cinzel text-center text-foreground/28 tracking-widest mt-3" style={{ fontSize:9 }}>
+        <p className="font-cinzel text-center text-foreground/28 tracking-widest mt-4" style={{ fontSize:9 }}>
           — José Rizal
         </p>
       </div>
-      <div className="flex flex-wrap justify-center gap-3 mt-4">
+      <div className="flex flex-wrap justify-center gap-4 mt-5">
         {scenario.wordOptions?.map((word) => {
           const isWrong   = wrong === word;
           const isSnapped = snapped === word;
@@ -477,7 +477,7 @@ function WordFillQuiz({ scenario, dark, wrong, snapped, onCorrect, onWrong }: {
             <button key={word}
               onClick={() => !snapped && (word === scenario.blankCorrect ? onCorrect() : onWrong(word))}
               disabled={!!snapped}
-              className={`font-cinzel font-bold px-5 py-2.5 transition-all duration-200 select-none
+              className={`font-cinzel font-bold px-5 py-3 transition-all duration-200 select-none
                 ${isWrong ? "animate-shake" : ""}
                 ${!snapped && !isWrong ? "hover:-translate-y-1 hover:shadow-lg" : ""}
                 ${isSnapped ? "opacity-0 scale-75" : ""}
@@ -496,7 +496,7 @@ function WordFillQuiz({ scenario, dark, wrong, snapped, onCorrect, onWrong }: {
         })}
       </div>
       {wrong && (
-        <p className="text-center font-inter font-semibold mt-3 animate-slide-up" style={{ fontSize:12, color:"#9C3D3D" }}>
+        <p className="text-center font-inter font-semibold mt-4 animate-slide-up" style={{ fontSize:12, color:"#9C3D3D" }}>
           ✕ &nbsp;Wrong answer — try again.
         </p>
       )}
@@ -521,8 +521,8 @@ function MultiChoiceQuiz({ scenario, dark, wrong, onCorrect, onWrong }: {
 
   const bc = dark ? "rgba(200,162,77,0.22)" : "rgba(43,30,24,0.22)";
   return (
-    <div className="space-y-2.5">
-      <p className="font-cinzel font-bold leading-snug mb-3"
+    <div className="space-y-3">
+      <p className="font-cinzel font-bold leading-snug mb-4"
         style={{ fontSize:13, color: dark ? "#F0E6C8" : "#2B1E18" }}>
         {scenario.question}
       </p>
@@ -534,7 +534,7 @@ function MultiChoiceQuiz({ scenario, dark, wrong, onCorrect, onWrong }: {
           <button key={c.id}
             onClick={() => handleClick(c)}
             disabled={!!chosen && !isChosen}
-            className={`w-full text-left p-3.5 transition-all duration-250
+            className={`w-full text-left p-4 transition-all duration-250
               ${isWrong ? "animate-shake" : ""}
               ${!chosen ? "hover:-translate-y-0.5 hover:shadow-sm" : ""}
             `}
@@ -546,7 +546,7 @@ function MultiChoiceQuiz({ scenario, dark, wrong, onCorrect, onWrong }: {
                         : isWrong   ? "rgba(156,61,61,0.1)"
                         : dark ? "rgba(240,230,200,0.04)" : "rgba(248,241,229,0.5)",
             }}>
-            <p className="font-merriweather leading-snug" style={{ fontSize:12, color: dark ? "rgba(240,230,200,0.82)" : "rgba(43,30,24,0.82)" }}>
+            <p className="font-merriweather leading-snug" style={{ fontSize:12.5, color: dark ? "rgba(240,230,200,0.82)" : "rgba(43,30,24,0.82)", lineHeight: "1.6" }}>
               {c.text}
             </p>
             {isCorrect && (
@@ -575,35 +575,35 @@ function FeedbackPanel({ scenario, dark, onNext, isLast }: {
   const citeBdr  = dark ? "rgba(200,162,77,0.2)"  : "rgba(43,30,24,0.18)";
   const pts = scenario.points;
   return (
-    <div className="space-y-3 animate-slide-up">
+    <div className="space-y-4 animate-slide-up">
       {/* Correct feedback */}
-      <div className="p-4" style={{ background: greenBg, border:`2px solid ${greenBdr}` }}>
-        <p className="font-inter font-semibold mb-1.5" style={{ fontSize:11, color:"#5E8B4A" }}>✓ Correct!</p>
-        <p className="font-merriweather leading-relaxed" style={{ fontSize:12, color: dark ? "rgba(240,230,200,0.78)" : "rgba(43,30,24,0.78)" }}>
+      <div className="p-5" style={{ background: greenBg, border:`2px solid ${greenBdr}` }}>
+        <p className="font-inter font-semibold mb-2" style={{ fontSize:12, color:"#5E8B4A" }}>✓ Correct!</p>
+        <p className="font-merriweather leading-relaxed" style={{ fontSize:12, color: dark ? "rgba(240,230,200,0.78)" : "rgba(43,30,24,0.78)", lineHeight: "1.7" }}>
           {scenario.correctFeedback}
         </p>
       </div>
       {/* Points + SDG */}
-      <div className="flex flex-wrap gap-2 items-start">
-        <div className="flex gap-2.5 flex-wrap">
-          {(pts.awareness    ?? 0) > 0 && <span className="font-inter font-bold px-2.5 py-1 text-xs" style={{ background:"rgba(94,139,74,0.12)", color:"#5E8B4A", border:"1px solid #5E8B4A55" }}>+{pts.awareness} Awareness</span>}
-          {(pts.sustainability ?? 0) > 0 && <span className="font-inter font-bold px-2.5 py-1 text-xs" style={{ background:"rgba(200,162,77,0.12)", color:"#C8A24D", border:"1px solid #C8A24D55" }}>+{pts.sustainability} Sustainability</span>}
-          {(pts.justice      ?? 0) > 0 && <span className="font-inter font-bold px-2.5 py-1 text-xs" style={{ background:"rgba(156,61,61,0.12)", color:"#9C3D3D", border:"1px solid #9C3D3D55" }}>+{pts.justice} Justice</span>}
+      <div className="flex flex-wrap gap-3 items-start">
+        <div className="flex gap-3 flex-wrap">
+          {(pts.awareness    ?? 0) > 0 && <span className="font-inter font-bold px-3 py-1.5 text-xs" style={{ background:"rgba(94,139,74,0.12)", color:"#5E8B4A", border:"1px solid #5E8B4A55" }}>+{pts.awareness} Awareness</span>}
+          {(pts.sustainability ?? 0) > 0 && <span className="font-inter font-bold px-3 py-1.5 text-xs" style={{ background:"rgba(200,162,77,0.12)", color:"#C8A24D", border:"1px solid #C8A24D55" }}>+{pts.sustainability} Sustainability</span>}
+          {(pts.justice      ?? 0) > 0 && <span className="font-inter font-bold px-3 py-1.5 text-xs" style={{ background:"rgba(156,61,61,0.12)", color:"#9C3D3D", border:"1px solid #9C3D3D55" }}>+{pts.justice} Justice</span>}
         </div>
       </div>
       {/* SDG connection */}
-      <div className="border-l-2 border-primary pl-3 py-0.5">
-        <p className="font-cinzel uppercase tracking-widest mb-0.5" style={{ fontSize:8, color: dark ? "rgba(200,162,77,0.5)" : "rgba(43,30,24,0.35)" }}>SDG Connection</p>
-        <p className="font-merriweather italic" style={{ fontSize:11, color:"#5E8B4A" }}>{scenario.sdgConnection}</p>
+      <div className="border-l-2 border-primary pl-4 py-1">
+        <p className="font-cinzel uppercase tracking-widest mb-1" style={{ fontSize:8, color: dark ? "rgba(200,162,77,0.5)" : "rgba(43,30,24,0.35)" }}>SDG Connection</p>
+        <p className="font-merriweather italic" style={{ fontSize:11.5, color:"#5E8B4A", lineHeight: "1.6" }}>{scenario.sdgConnection}</p>
       </div>
       {/* APA citation */}
-      <div className="p-3" style={{ background: citeBg, border:`1px solid ${citeBdr}` }}>
-        <p className="font-cinzel uppercase tracking-widest mb-1" style={{ fontSize:8, color: dark ? "rgba(200,162,77,0.45)" : "rgba(43,30,24,0.32)" }}>Source (APA 7th Edition)</p>
-        <p className="font-merriweather italic leading-relaxed" style={{ fontSize:10, color: dark ? "rgba(240,230,200,0.55)" : "rgba(43,30,24,0.55)" }}>
+      <div className="p-4" style={{ background: citeBg, border:`1px solid ${citeBdr}` }}>
+        <p className="font-cinzel uppercase tracking-widest mb-2" style={{ fontSize:8, color: dark ? "rgba(200,162,77,0.45)" : "rgba(43,30,24,0.32)" }}>Source (APA 7th Edition)</p>
+        <p className="font-merriweather italic leading-relaxed" style={{ fontSize:10.5, color: dark ? "rgba(240,230,200,0.55)" : "rgba(43,30,24,0.55)", lineHeight: "1.65" }}>
           {scenario.citation}
         </p>
       </div>
-      <div className="flex justify-end pt-1">
+      <div className="flex justify-end pt-2">
         {dark
           ? <InkButton onClick={onNext} variant="gold">{isLast ? "Complete Chapter →" : "Next →"}</InkButton>
           : <InkButton onClick={onNext} variant="green">{isLast ? "Complete Chapter →" : "Next →"}</InkButton>
@@ -662,12 +662,12 @@ function ChapterGameScreen({
 
   return (
     <ParchmentPage dark={dark}>
-      <div className="min-h-screen px-4 py-8">
+      <div className="min-h-screen px-4 py-10">
         <div className="max-w-3xl mx-auto animate-screen-in">
           {/* Header */}
-          <div className="mb-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex gap-3 text-xs font-inter font-semibold">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex gap-6 text-xs font-inter font-semibold">
                 <span style={{ color:"#5E8B4A" }}>AWR {runningScores.awareness}</span>
                 <span style={{ color:"#C8A24D" }}>SUS {runningScores.sustainability}</span>
                 <span style={{ color:"#9C3D3D" }}>JUS {runningScores.justice}</span>
@@ -684,46 +684,46 @@ function ChapterGameScreen({
                   style={{ background: i < idx ? accentColor : i === idx ? `${accentColor}70` : (dark ? "rgba(240,230,200,0.1)" : "rgba(43,30,24,0.1)") }} />
               ))}
             </div>
-            <div className="text-center mt-3">
+            <div className="text-center mt-5">
               <p className="font-cinzel tracking-[0.38em] uppercase" style={{ fontSize:10, color: dark ? `${accentColor}90` : "rgba(43,30,24,0.38)" }}>
                 Chapter {chapterNum}
               </p>
-              <h2 className="font-cinzel font-black mt-0.5" style={{ fontSize:"clamp(1.3rem,4vw,1.9rem)", color: tc }}>
+              <h2 className="font-cinzel font-black mt-1" style={{ fontSize:"clamp(1.3rem,4vw,1.9rem)", color: tc }}>
                 {chapterTitle}
               </h2>
-              <p className="font-merriweather italic mt-0.5" style={{ fontSize:11, color: dark ? "rgba(240,230,200,0.4)" : "rgba(43,30,24,0.42)" }}>
+              <p className="font-merriweather italic mt-1" style={{ fontSize:11, color: dark ? "rgba(240,230,200,0.4)" : "rgba(43,30,24,0.42)" }}>
                 {location}
               </p>
             </div>
           </div>
 
           {/* Main grid: portrait | story+quiz */}
-          <div className="grid md:grid-cols-3 gap-5">
+          <div className="grid md:grid-cols-3 gap-6 md:gap-8 mt-8">
             {/* Left: portrait + speech */}
             <div className="md:col-span-1">
               <StoryPanel scenario={scenario} dark={dark} />
             </div>
 
             {/* Right: narrative + quiz/feedback */}
-            <div className="md:col-span-2 space-y-4">
+            <div className="md:col-span-2 space-y-5">
               {/* Story narrative */}
-              <div className="p-4" style={{
+              <div className="p-5" style={{
                 background: dark ? "rgba(240,230,200,0.04)" : "rgba(248,241,229,0.5)",
                 border:`1px solid ${dark ? "rgba(200,162,77,0.18)" : "rgba(43,30,24,0.14)"}`,
               }}>
-                <p className="font-cinzel uppercase tracking-wider mb-1.5"
+                <p className="font-cinzel uppercase tracking-wider mb-2"
                   style={{ fontSize:9, color: dark ? `${accentColor}80` : "rgba(43,30,24,0.38)" }}>
                   {scenario.storyContext}
                 </p>
                 <p className="font-merriweather text-sm leading-relaxed"
-                  style={{ color: dark ? "rgba(240,230,200,0.78)" : "rgba(43,30,24,0.78)" }}>
+                  style={{ fontSize: 12.5, color: dark ? "rgba(240,230,200,0.78)" : "rgba(43,30,24,0.78)", lineHeight: "1.7" }}>
                   {scenario.storyNarrative}
                 </p>
               </div>
 
               {/* Quiz area */}
               {phase === "quiz" && (
-                <div className="animate-screen-in">
+                <div className="animate-screen-in pt-1">
                   {scenario.type === "word-fill" ? (
                     <WordFillQuiz
                       scenario={scenario} dark={dark}
@@ -769,36 +769,38 @@ function ChapterCompleteScreen({
   const totalEarned = earned.awareness + earned.sustainability + earned.justice;
   return (
     <ParchmentPage>
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-14 sm:py-18">
         <div className="w-full max-w-sm animate-screen-in">
           <OrnateFrame>
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-5">
               <div className="flex justify-center">
-                <div className="w-36">
-                  <Portrait type={portrait} className="w-full h-44 object-cover object-left" />
+                <div className="w-40">
+                  <Portrait type={portrait} className="w-full h-48 object-cover object-left" />
                 </div>
               </div>
               <div>
                 <p className="font-cinzel text-foreground/38 tracking-widest uppercase" style={{ fontSize:10 }}>
                   Chapter {chapterNum} Complete
                 </p>
-                <h3 className="font-cinzel font-black text-foreground mt-1"
+                <h3 className="font-cinzel font-black text-foreground mt-2"
                   style={{ fontSize:"clamp(1.2rem,3.5vw,1.65rem)" }}>
                   {title}
                 </h3>
               </div>
-              <div className="py-3 px-4" style={{ background:`${color}14`, border:`2px solid ${color}55` }}>
-                <p className="font-inter font-bold" style={{ fontSize:26, color }}>{totalEarned}</p>
-                <p className="font-cinzel tracking-wider text-foreground/50 uppercase" style={{ fontSize:9 }}>
+              <div className="py-4 px-5" style={{ background:`${color}14`, border:`2px solid ${color}55` }}>
+                <p className="font-inter font-bold" style={{ fontSize:28, color }}>{totalEarned}</p>
+                <p className="font-cinzel tracking-wider text-foreground/50 uppercase mt-1" style={{ fontSize:9 }}>
                   Points Earned this Chapter
                 </p>
               </div>
-              <p className="font-merriweather italic text-foreground/62 leading-relaxed" style={{ fontSize:12 }}>
+              <p className="font-merriweather italic text-foreground/62 leading-relaxed" style={{ fontSize:12, lineHeight:"1.7" }}>
                 {summaryText}
               </p>
               <Divider />
-              <p className="font-merriweather italic text-primary/75" style={{ fontSize:11 }}>{sdgLink}</p>
-              <InkButton onClick={onContinue} variant="green">{continueLabel}</InkButton>
+              <p className="font-merriweather italic text-primary/75 pt-1" style={{ fontSize:11 }}>{sdgLink}</p>
+              <div className="pt-2">
+                <InkButton onClick={onContinue} variant="green">{continueLabel}</InkButton>
+              </div>
             </div>
           </OrnateFrame>
         </div>
@@ -809,44 +811,134 @@ function ChapterCompleteScreen({
 
 // ─── Loading Screen ───────────────────────────────────────────────────────────
 
-function LoadingScreen({ onStart }: { onStart: () => void }) {
+function LoadingScreen({ onStart, onShowSDGInfo }: { onStart: () => void; onShowSDGInfo: () => void }) {
+  const homeContent = (
+    <div className="w-full max-w-md animate-screen-in text-center space-y-7 sm:space-y-8">
+      <div className="flex justify-center">
+        <div className="flex items-center gap-2 px-4 py-2.5"
+          style={{ border:"2px solid #5E8B4A" }}>
+          <Building2 size={13} style={{ color:"#5E8B4A" }} />
+          <span className="font-inter font-semibold tracking-widest text-primary uppercase" style={{ fontSize:9 }}>
+            SDG 11 · Sustainable Cities &amp; Communities
+          </span>
+        </div>
+      </div>
+      <div className="flex justify-center pt-2">
+        <div className="relative w-48">
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background:"radial-gradient(ellipse at 50% 65%, rgba(200,162,77,0.28) 0%, transparent 70%)" }} />
+          <Portrait type="flat" silhouette className="w-full h-60 object-cover object-left relative z-10" />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <h1 className="font-cinzel font-black text-foreground leading-none"
+          style={{ fontSize:"clamp(2.2rem,7vw,3.5rem)", letterSpacing:"-0.01em" }}>RIZAL</h1>
+        <p className="font-im-fell italic text-foreground/65"
+          style={{ fontSize:"clamp(0.9rem,2.5vw,1.1rem)" }}>
+          Architect of a Sustainable Nation
+        </p>
+      </div>
+      <Divider />
+      <p className="font-merriweather italic text-foreground/58 leading-relaxed max-w-xs mx-auto"
+        style={{ fontSize:13, lineHeight:"1.7" }}>
+        "Shape communities through knowledge, action, and reform."
+      </p>
+      <div className="flex flex-col gap-4 pt-2">
+        <InkButton onClick={onStart} variant="green">START GAME</InkButton>
+        <InkButton onClick={onShowSDGInfo} variant="ink">Learn About SDG 11</InkButton>
+      </div>
+      <p className="font-cinzel text-foreground/25 tracking-[0.3em] uppercase pt-3" style={{ fontSize:9 }}>
+        1861 — 1896 · LAGUNA, PHILIPPINES
+      </p>
+    </div>
+  );
+
   return (
     <ParchmentPage>
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md animate-screen-in text-center space-y-6">
-          <div className="flex justify-center">
-            <div className="flex items-center gap-2 px-4 py-2"
-              style={{ border:"2px solid #5E8B4A" }}>
-              <Building2 size={13} style={{ color:"#5E8B4A" }} />
-              <span className="font-inter font-semibold tracking-widest text-primary uppercase" style={{ fontSize:9 }}>
-                SDG 11 · Sustainable Cities &amp; Communities
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-center">
-            <div className="relative w-44">
-              <div className="absolute inset-0 pointer-events-none"
-                style={{ background:"radial-gradient(ellipse at 50% 65%, rgba(200,162,77,0.28) 0%, transparent 70%)" }} />
-              <Portrait type="flat" silhouette className="w-full h-56 object-cover object-left relative z-10" />
-            </div>
-          </div>
-          <div className="space-y-1">
-            <h1 className="font-cinzel font-black text-foreground leading-none"
-              style={{ fontSize:"clamp(2.2rem,7vw,3.5rem)", letterSpacing:"-0.01em" }}>RIZAL</h1>
-            <p className="font-im-fell italic text-foreground/65"
-              style={{ fontSize:"clamp(0.9rem,2.5vw,1.1rem)" }}>
-              Architect of a Sustainable Nation
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16 sm:py-20">
+        {homeContent}
+      </div>
+    </ParchmentPage>
+  );
+}
+
+function SDGInfoScreen({ onBack, onStart }: { onBack: () => void; onStart: () => void }) {
+  return (
+    <ParchmentPage>
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-16 sm:py-20">
+        <div className="w-full max-w-3xl animate-screen-in space-y-8">
+          <div className="text-center">
+            <p className="font-cinzel text-foreground/38 tracking-[0.38em] uppercase" style={{ fontSize:10 }}>
+              Understanding the Framework
             </p>
+            <h2 className="font-cinzel font-black text-foreground mt-3 mb-2"
+              style={{ fontSize:"clamp(1.3rem,4vw,1.9rem)" }}>
+              SDG 11: Sustainable Cities &amp; Communities
+            </h2>
           </div>
-          <Divider />
-          <p className="font-merriweather italic text-foreground/58 leading-relaxed max-w-xs mx-auto"
-            style={{ fontSize:13 }}>
-            "Shape communities through knowledge, action, and reform."
-          </p>
-          <InkButton onClick={onStart} variant="green">START</InkButton>
-          <p className="font-cinzel text-foreground/25 tracking-[0.3em] uppercase" style={{ fontSize:9 }}>
-            1861 — 1896 · LAGUNA, PHILIPPINES
-          </p>
+
+          <OrnateFrame>
+            <div className="space-y-6 md:space-y-7">
+              <div>
+                <p className="font-cinzel font-bold text-foreground mb-3" style={{ fontSize:13, color:"#5E8B4A" }}>
+                  What is SDG 11?
+                </p>
+                <p className="font-merriweather text-foreground/78 leading-relaxed" style={{ fontSize:12, lineHeight:"1.7" }}>
+                  Sustainable Development Goal 11 calls for making cities and human settlements inclusive, safe, resilient, and sustainable by 2030. It addresses how communities should be built — not just with infrastructure, but with equity, participation, cultural heritage, and environmental responsibility.
+                </p>
+              </div>
+
+              <Divider />
+
+              <div className="space-y-4">
+                <p className="font-cinzel font-bold text-foreground" style={{ fontSize:13, color:"#5E8B4A" }}>
+                  Key Targets of SDG 11:
+                </p>
+                <ul className="space-y-3">
+                  <li className="flex gap-3">
+                    <span style={{ color:"#5E8B4A", fontSize:11, fontWeight:"bold" }}>11.1</span>
+                    <p className="font-merriweather text-foreground/75" style={{ fontSize:12 }}>
+                      <strong>Adequate Housing &amp; Services</strong> — Safe, adequate, and affordable housing and basic services accessible to all.
+                    </p>
+                  </li>
+                  <li className="flex gap-3">
+                    <span style={{ color:"#5E8B4A", fontSize:11, fontWeight:"bold" }}>11.3</span>
+                    <p className="font-merriweather text-foreground/75" style={{ fontSize:12 }}>
+                      <strong>Inclusive Participation</strong> — Participatory, integrated human settlement planning with full civic engagement.
+                    </p>
+                  </li>
+                  <li className="flex gap-3">
+                    <span style={{ color:"#5E8B4A", fontSize:11, fontWeight:"bold" }}>11.4</span>
+                    <p className="font-merriweather text-foreground/75" style={{ fontSize:12 }}>
+                      <strong>Cultural Heritage</strong> — Protect and safeguard cultural and natural heritage for future generations.
+                    </p>
+                  </li>
+                  <li className="flex gap-3">
+                    <span style={{ color:"#5E8B4A", fontSize:11, fontWeight:"bold" }}>11.6</span>
+                    <p className="font-merriweather text-foreground/75" style={{ fontSize:12 }}>
+                      <strong>Environmental Impact</strong> — Reduce environmental impact and ensure clean water, waste management, and green spaces.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+
+              <Divider />
+
+              <div>
+                <p className="font-cinzel font-bold text-foreground mb-3" style={{ fontSize:13, color:"#5E8B4A" }}>
+                  Why José Rizal?
+                </p>
+                <p className="font-merriweather text-foreground/78 leading-relaxed" style={{ fontSize:12, lineHeight:"1.7" }}>
+                  More than a century before the UN adopted SDG 11, José Rizal was already building, writing, and organizing for these principles. Through his novels, his civic organizations, his infrastructure projects in Dapitan, and his unwavering commitment to Filipino self-governance and cultural identity, Rizal demonstrated that truly sustainable communities are built on education, justice, participation, and heritage — the exact pillars of SDG 11.
+                </p>
+              </div>
+            </div>
+          </OrnateFrame>
+
+          <div className="text-center flex flex-col sm:flex-row gap-4 justify-center mt-2 pt-2">
+            <InkButton onClick={onBack} variant="ink">← Back to Home</InkButton>
+            <InkButton onClick={onStart} variant="green">Begin Game →</InkButton>
+          </div>
         </div>
       </div>
     </ParchmentPage>
@@ -866,23 +958,23 @@ function ChapterSelectScreen({ unlocked, completed, scores, onSelect }: {
   ];
   return (
     <ParchmentPage>
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-10">
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-14 sm:py-16">
         <div className="w-full max-w-2xl animate-screen-in">
           <OrnateFrame>
-            <div className="text-center mb-3">
+            <div className="text-center mb-6">
               <p className="font-cinzel text-foreground/38 tracking-[0.38em] uppercase" style={{ fontSize:10 }}>
                 Choose Your Chapter
               </p>
-              <h2 className="font-cinzel font-black text-foreground mt-1"
+              <h2 className="font-cinzel font-black text-foreground mt-2 mb-4"
                 style={{ fontSize:"clamp(1.3rem,4vw,1.9rem)" }}>The Path of Rizal</h2>
-              <div className="flex justify-center gap-4 mt-2 font-inter font-semibold text-xs">
+              <div className="flex justify-center gap-6 mt-3 font-inter font-semibold text-xs">
                 <span style={{ color:"#5E8B4A" }}>AWR {scores.awareness}</span>
                 <span style={{ color:"#C8A24D" }}>SUS {scores.sustainability}</span>
                 <span style={{ color:"#9C3D3D" }}>JUS {scores.justice}</span>
               </div>
             </div>
             <Divider />
-            <div className="space-y-3">
+            <div className="space-y-4 my-6">
               {chapters.map(({ n, title, sub, Icon, color }) => {
                 const isUnlocked = n <= unlocked;
                 const isDone     = completed.includes(n);
@@ -916,7 +1008,7 @@ function ChapterSelectScreen({ unlocked, completed, scores, onSelect }: {
                           {!isUnlocked && <span className="font-inter font-semibold px-2 py-0.5 text-[9px]"
                             style={{ background:"rgba(43,30,24,0.08)", color:"rgba(43,30,24,0.38)", border:"1px solid rgba(43,30,24,0.15)" }}>LOCKED</span>}
                         </div>
-                        <p className="font-merriweather text-foreground/50 mt-0.5" style={{ fontSize:11 }}>{sub} · 5 Scenarios</p>
+                        <p className="font-merriweather text-foreground/50 mt-1" style={{ fontSize:11 }}>{sub} · 5 Scenarios</p>
                       </div>
                       {isUnlocked && !isDone && (
                         <span className="font-inter text-foreground/30 group-hover:text-foreground/65 transition-colors text-xl">→</span>
@@ -927,7 +1019,7 @@ function ChapterSelectScreen({ unlocked, completed, scores, onSelect }: {
               })}
             </div>
             <Divider />
-            <p className="text-center font-merriweather italic text-foreground/38" style={{ fontSize:11 }}>
+            <p className="text-center font-merriweather italic text-foreground/38 mt-6" style={{ fontSize:11 }}>
               Complete each chapter to unlock the next stage of Rizal's legacy.
             </p>
           </OrnateFrame>
@@ -939,7 +1031,7 @@ function ChapterSelectScreen({ unlocked, completed, scores, onSelect }: {
 
 // ─── Final Score ──────────────────────────────────────────────────────────────
 
-function FinalScoreScreen({ scores }: { scores: Scores }) {
+function FinalScoreScreen({ scores, onViewAnalysis }: { scores: Scores; onViewAnalysis?: () => void }) {
   const maxA = 50, maxS = 50, maxJ = 55; // approximate maxes across all scenarios
   const total = scores.awareness + scores.sustainability + scores.justice;
   const maxTotal = maxA + maxS + maxJ;
@@ -947,30 +1039,30 @@ function FinalScoreScreen({ scores }: { scores: Scores }) {
   const perfect = pct >= 80;
   return (
     <ParchmentPage>
-      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12">
+      <div className="min-h-screen flex flex-col items-center justify-center px-4 py-14 sm:py-18">
         <div className="w-full max-w-md animate-screen-in">
           <OrnateFrame>
-            <div className="text-center space-y-5">
+            <div className="text-center space-y-6">
               <div className="flex justify-center">
-                <div className="w-36">
-                  <Portrait type="flat" className="w-full h-44 object-cover object-left" />
+                <div className="w-40">
+                  <Portrait type="flat" className="w-full h-48 object-cover object-left" />
                 </div>
               </div>
               <div>
                 <p className="font-cinzel text-foreground/35 tracking-[0.38em] uppercase" style={{ fontSize:10 }}>Final Score</p>
-                <h1 className="font-cinzel font-black text-foreground mt-1"
+                <h1 className="font-cinzel font-black text-foreground mt-2"
                   style={{ fontSize:"clamp(1.4rem,4.5vw,2rem)" }}>
                   {perfect ? "Rizal's Sustainable Legacy Achieved" : "Your Legacy Endures"}
                 </h1>
               </div>
-              <div className="space-y-3 text-left">
+              <div className="space-y-4 text-left">
                 <ScoreBarAnimated label="Awareness"      value={scores.awareness}      max={maxA} color="#5E8B4A" />
                 <ScoreBarAnimated label="Sustainability"  value={scores.sustainability}  max={maxS} color="#C8A24D" />
                 <ScoreBarAnimated label="Justice"         value={scores.justice}         max={maxJ} color="#9C3D3D" />
               </div>
-              <div className="py-4" style={{ border:"2px solid rgba(43,30,24,0.22)", background:"rgba(43,30,24,0.03)" }}>
-                <p className="font-inter font-black text-foreground" style={{ fontSize:44, lineHeight:1 }}>{pct}%</p>
-                <p className="font-cinzel text-foreground/35 tracking-widest uppercase mt-1" style={{ fontSize:9 }}>
+              <div className="py-5" style={{ border:"2px solid rgba(43,30,24,0.22)", background:"rgba(43,30,24,0.03)" }}>
+                <p className="font-inter font-black text-foreground" style={{ fontSize:48, lineHeight:1 }}>{pct}%</p>
+                <p className="font-cinzel text-foreground/35 tracking-widest uppercase mt-2" style={{ fontSize:9 }}>
                   Legacy Score · {total} pts
                 </p>
               </div>
@@ -987,10 +1079,18 @@ function FinalScoreScreen({ scores }: { scores: Scores }) {
                 </div>
               )}
               <Divider />
-              <p className="font-im-fell italic text-foreground/40" style={{ fontSize:12 }}>
-                "He who does not know how to look back at where he came from will never reach his destination."
-              </p>
-              <p className="font-cinzel text-foreground/26 tracking-widest uppercase" style={{ fontSize:9 }}>— José Rizal</p>
+              <div className="flex flex-col gap-3 pt-2">
+                {onViewAnalysis && (
+                  <InkButton onClick={onViewAnalysis} variant="green">View Analysis &amp; References →</InkButton>
+                )}
+                <InkButton onClick={() => window.location.reload()} variant="ink">← Return to Start</InkButton>
+              </div>
+              <div className="text-center space-y-2 mt-4">
+                <p className="font-im-fell italic text-foreground/40" style={{ fontSize:12 }}>
+                  "He who does not know how to look back at where he came from will never reach his destination."
+                </p>
+                <p className="font-cinzel text-foreground/26 tracking-widest uppercase" style={{ fontSize:9 }}>— José Rizal</p>
+              </div>
             </div>
           </OrnateFrame>
         </div>
@@ -999,7 +1099,164 @@ function FinalScoreScreen({ scores }: { scores: Scores }) {
   );
 }
 
-// ─── Chapter 1 Exclusive ─────────────────────────────────────────────────────
+// ─── Analysis & References Screen ─────────────────────────────────────────────
+
+function AnalysisScreen({ scores, onReturn }: { scores: Scores; onReturn: () => void }) {
+  return (
+    <ParchmentPage>
+      <div className="min-h-screen px-4 py-16 sm:py-20">
+        <div className="max-w-3xl mx-auto animate-screen-in space-y-8">
+          {/* Header */}
+          <div className="text-center mb-10">
+            <p className="font-cinzel text-foreground/35 tracking-[0.38em] uppercase" style={{ fontSize:10 }}>
+              Final Analysis
+            </p>
+            <h1 className="font-cinzel font-black text-foreground mt-3"
+              style={{ fontSize:"clamp(1.4rem,4vw,2rem)" }}>
+              José Rizal &amp; SDG 11: A Century of Foresight
+            </h1>
+          </div>
+
+          {/* Main Analysis */}
+          <OrnateFrame>
+            <div className="space-y-7">
+              <div className="pt-1">
+                <h2 className="font-cinzel font-bold text-foreground mb-4" style={{ fontSize:14, color:"#5E8B4A" }}>
+                  Written Analysis: The Connection Between Rizal &amp; SDG 11
+                </h2>
+                
+                <div className="space-y-5 font-merriweather text-foreground/78" style={{ fontSize:12, lineHeight:"1.75" }}>
+                  <p>
+                    José Rizal's life and work embody the fundamental principles of Sustainable Development Goal 11 over a century before the United Nations articulated them. Though Rizal died in 1896, decades before the term "sustainable development" entered global discourse, his actions, writings, and organizational efforts anticipated every major pillar of SDG 11.
+                  </p>
+
+                  <p>
+                    <strong style={{ color:"#2B1E18" }}>Education as the Foundation (SDG 11.1, 11.3):</strong> Rizal understood that inclusive, sustainable communities cannot exist without universal education. His free school in Dapitan served children regardless of class, directly embodying SDG 11.3's call for inclusive participation in civic life. His novels, written in Spanish and Tagalog, were tools of popular education — reaching audiences across the archipelago and awakening them to social injustice. Rizal's belief that "the youth are the hope of the nation" reflects the precise conviction underlying SDG 11: that knowledgeable, engaged citizens are the foundation of sustainable settlements.
+                  </p>
+
+                  <p>
+                    <strong style={{ color:"#2B1E18" }}>Infrastructure &amp; Environmental Sustainability (SDG 11.6, 11.7):</strong> During his exile in Dapitan, Rizal didn't theorize — he built. He designed and constructed a water system using bamboo and clay pipes, bringing clean water to every family in the town. He introduced scientific farming techniques and crop rotation to ensure food security. He mapped the town systematically to optimize public access and sanitation. These concrete projects directly address SDG 11.6 and 11.7: reducing environmental impact and ensuring inclusive access to green, productive spaces.
+                  </p>
+
+                  <p>
+                    <strong style={{ color:"#2B1E18" }}>Participatory Governance &amp; Civic Participation (SDG 11.3):</strong> La Liga Filipina, Rizal's civic organization, proposed exactly what SDG 11.3 demands: "participatory and inclusive human settlement planning and management." The Liga called for mutual aid, community self-governance, and collective decision-making — revolutionary concepts in a colonial context. Rizal believed that sustainable communities must be governed by their own people, with full participation of all residents, not imposed from above by distant authorities.
+                  </p>
+
+                  <p>
+                    <strong style={{ color:"#2B1E18" }}>Cultural Heritage &amp; Identity (SDG 11.4):</strong> Rizal's annotation of Antonio de Morga's Sucesos was a deliberate act of cultural preservation. By documenting pre-colonial Filipino civilization, Rizal demonstrated that communities must know and honor their heritage to build their future. This is SDG 11.4 in practice: "Strengthen efforts to protect and safeguard the world's cultural and natural heritage." Rizal believed that a people without historical consciousness cannot be truly free, and cannot build communities grounded in authentic identity.
+                  </p>
+
+                  <p>
+                    <strong style={{ color:"#2B1E18" }}>Justice as the Prerequisite (SDG 11 Overall):</strong> Perhaps most importantly, Rizal understood that sustainability cannot be achieved without justice. His novels exposed how colonial systems degraded community life, human dignity, and possibility. El Filibusterismo warned that communities denied hope and recourse will fracture into conflict — making sustainable development impossible. Rizal's willingness to risk his life for truth and transparency speaks to SDG 11.3's requirement for "accountable and inclusive institutions" — not just infrastructure, but systems built on justice.
+                  </p>
+
+                  <p>
+                    Rizal's entire life was a lived argument for SDG 11: that truly sustainable cities and communities are built through education, environmental responsibility, participatory governance, cultural preservation, and justice — the very principles the UN codified 115 years after his death. He teaches us that sustainable development is not a technical problem solved by engineers and planners alone, but a moral and political challenge requiring the full participation of educated, justice-seeking citizens committed to their collective flourishing.
+                  </p>
+                </div>
+              </div>
+
+              <Divider />
+
+              {/* References */}
+              <div className="pt-2">
+                <h2 className="font-cinzel font-bold text-foreground mb-4" style={{ fontSize:14, color:"#5E8B4A" }}>
+                  References (APA 7th Edition)
+                </h2>
+                
+                <div className="space-y-3 font-merriweather text-foreground/70" style={{ fontSize:11, lineHeight:"1.75" }}>
+                  <p>
+                    Bantug, J. P. (1946). <em>A short history of medicine in the Philippines.</em> Colegio Médico Farmacéutico.
+                  </p>
+
+                  <p>
+                    Craig, A. (1913). <em>Lineage, life and labors of José Rizal.</em> Philippine Education Company.
+                  </p>
+
+                  <p>
+                    Guerrero, L. M. (1963). <em>The first Filipino: A biography of José Rizal.</em> National Heroes Commission.
+                  </p>
+
+                  <p>
+                    Ocampo, A. R. (2000). <em>Rizal without the overcoat.</em> Anvil Publishing.
+                  </p>
+
+                  <p>
+                    Rizal, J. P. (1887). <em>Noli me tangere</em> (C. Derbyshire, Trans.). Philippine Education Company. (Original work published 1887)
+                  </p>
+
+                  <p>
+                    Rizal, J. P. (1891). <em>El filibusterismo</em> (C. Derbyshire, Trans.). Philippine Education Company. (Original work published 1891)
+                  </p>
+
+                  <p>
+                    Rizal, J. P. (1896). <em>Mi último adiós.</em> National Historical Commission of the Philippines.
+                  </p>
+
+                  <p>
+                    Rizal, J. P. (1889). <em>Writings of José Rizal.</em> National Historical Commission of the Philippines.
+                  </p>
+
+                  <p>
+                    United Nations. (2015). <em>Transforming our world: The 2030 agenda for sustainable development</em> (A/RES/70/1). https://sdgs.un.org/goals/goal11
+                  </p>
+
+                  <p>
+                    Zaide, G. F. (1984). <em>José Rizal: Life, works and writings.</em> National Book Store.
+                  </p>
+                </div>
+              </div>
+
+              <Divider />
+
+              {/* Summary Stats */}
+              <div className="bg-gradient-to-r from-[#5E8B4A]/10 to-[#C8A24D]/10 p-6 rounded mt-3"
+                style={{ border:"1px solid rgba(94,139,74,0.25)" }}>
+                <p className="font-cinzel text-foreground/40 tracking-widest uppercase mb-4" style={{ fontSize:9 }}>
+                  Your Legacy Score
+                </p>
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="text-center">
+                    <p className="font-inter font-black" style={{ fontSize:24, color:"#5E8B4A" }}>
+                      {scores.awareness}
+                    </p>
+                    <p className="font-cinzel text-foreground/50 uppercase mt-1" style={{ fontSize:8 }}>Awareness</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-inter font-black" style={{ fontSize:24, color:"#C8A24D" }}>
+                      {scores.sustainability}
+                    </p>
+                    <p className="font-cinzel text-foreground/50 uppercase mt-1" style={{ fontSize:8 }}>Sustainability</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="font-inter font-black" style={{ fontSize:24, color:"#9C3D3D" }}>
+                      {scores.justice}
+                    </p>
+                    <p className="font-cinzel text-foreground/50 uppercase mt-1" style={{ fontSize:8 }}>Justice</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </OrnateFrame>
+
+          {/* Footer */}
+          <div className="text-center flex justify-center mt-3">
+            <InkButton onClick={onReturn} variant="green">← Return to Menu</InkButton>
+          </div>
+
+          <div className="text-center space-y-3 mt-8 pt-4">
+            <p className="text-center font-im-fell italic text-foreground/40" style={{ fontSize:12 }}>
+              "The man who does not love his own language is worse than an animal and smells of fish."
+            </p>
+            <p className="text-center font-cinzel text-foreground/26 tracking-widest uppercase" style={{ fontSize:9 }}>
+              — José Rizal, Letter to the Filipinas
+            </p>
+          </div>
+        </div>
+      </div>
+    </ParchmentPage>
+  );
+}
 
 interface Ch1Puzzle {
   city: string;
@@ -1700,7 +1957,16 @@ export default function App() {
   return (
     <div className="size-full">
       {screen === "loading" && (
-        <LoadingScreen onStart={() => setScreen("chapter-select")} />
+        <LoadingScreen 
+          onStart={() => setScreen("chapter-select")}
+          onShowSDGInfo={() => setScreen("sdg-info")}
+        />
+      )}
+      {screen === "sdg-info" && (
+        <SDGInfoScreen 
+          onBack={() => setScreen("loading")}
+          onStart={() => setScreen("chapter-select")}
+        />
       )}
       {screen === "chapter-select" && (
         <ChapterSelectScreen
@@ -1751,7 +2017,10 @@ export default function App() {
         />
       )}
       {screen === "final-score" && (
-        <FinalScoreScreen scores={scores} />
+        <FinalScoreScreen scores={scores} onViewAnalysis={() => setScreen("analysis")} />
+      )}
+      {screen === "analysis" && (
+        <AnalysisScreen scores={scores} onReturn={() => setScreen("chapter-select")} />
       )}
     </div>
   );
